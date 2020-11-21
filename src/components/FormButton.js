@@ -5,7 +5,7 @@ import { windowHeight } from '../utils/Dimensions';
 export default function FormButton({ title, ...props }) {
   return (
     <TouchableOpacity style={styles.container} {...props}>
-      <Text>{title}</Text>
+      <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
 }

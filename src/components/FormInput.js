@@ -16,7 +16,8 @@ export default function FormInput({
       </View>
       <TextInput
         value={labelValue}
-        placeholderText={placeholderText}
+        numberOfLines={1}
+        placeholder={placeholderText}
         placeholderTextColor="#666"
         style={styles.input}
         {...props}
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 3,
     borderWidth: 1,
+    flexDirection: 'row',
   },
   input: {
     flex: 1,
