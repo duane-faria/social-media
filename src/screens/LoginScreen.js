@@ -32,7 +32,7 @@ export default function LoginScreen(props) {
       </Text>
       <Text
         style={[styles.forgotPassword, { marginTop: 60 }]}
-        onPress={() => Alert.alert('esqueci')}>
+        onPress={() => props.navigation.navigate('Register')}>
         Não tem uma conta? Crie aqui
       </Text>
     </View>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     height: 120,
   },
   text: {
-    fontFamily: 'Kufam-SemiBoldItalic',
+    fontFamily: 'RobotoSlab-Bold',
     fontSize: 28,
     marginBottom: 10,
     color: '#051d5f',
