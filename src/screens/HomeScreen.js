@@ -10,8 +10,8 @@ const posts = [
     userName: 'Rafaela Almeida',
     postTime: 'há 5 min',
     post: 'Olá esse é um post',
-    postImage: '',
-    liked: false,
+    postImage: 'wadwadwadawdwwadawdawdawda',
+    liked: true,
     likes: 0,
     comments: 0,
   },
@@ -20,7 +20,7 @@ const posts = [
     userName: 'Jessica Albuquerque',
     postTime: 'há 5 min',
     post: 'Olá esse é um post',
-    postImage: '',
+    postImage: null,
     liked: false,
     likes: 0,
     comments: 0,
@@ -30,7 +30,7 @@ const posts = [
     userName: 'Ashley',
     postTime: 'há 5 min',
     post: 'Olá esse é um post',
-    postImage: '',
+    postImage: '1',
     liked: false,
     likes: 0,
     comments: 0,
@@ -44,6 +44,7 @@ export default function HomeScreen() {
         data={posts}
         renderItem={({ item }) => <PostCard post={item} />}
         keyExtractor={(item) => String(item.id)}
+        showsVerticalScrollIndicator={false}
       />
     </Container>
   );

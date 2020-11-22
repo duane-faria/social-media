@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import AddPostScreen from '../screens/AddPostScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,7 +23,7 @@ const TabNav = () => (
     />
     <Tab.Screen
       name="Mensagens"
-      component={StackHome}
+      component={AddPostScreen}
       options={{
         tabBarIcon: ({ color, size }) => (
           <AntDesign name="message1" color={color} size={size} />

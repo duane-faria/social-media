@@ -1,9 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import styled from 'styled-components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function PostCard({ post }) {
+  const likeIcon = post.liked ? 'heart' : 'heart-outline';
+  const likeIconColor = post.liked ? '#2e64e5' : '#333';
   return (
     <>
       <Container>
@@ -20,16 +21,20 @@ export default function PostCard({ post }) {
           </UserNameContainer>
         </UserInfo>
         <PostText>{post.post}</PostText>
-        <PostImage
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1308&q=80',
-          }}
-        />
+        {post.postImage ? (
+          <PostImage
+            source={{
+              uri:
+                'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1308&q=80',
+            }}
+          />
+        ) : (
+          <Bar />
+        )}
         <InteractionContainer>
-          <Interaction active>
-            <Ionicons name="heart-outline" size={25} />
-            <InteractionText active>Like</InteractionText>
+          <Interaction active={post.liked}>
+            <Ionicons name={likeIcon} size={25} color={likeIconColor} />
+            <InteractionText active={post.liked}>Like</InteractionText>
           </Interaction>
           <Interaction>
             <Ionicons name="md-chatbubble-outline" size={25} />
@@ -101,6 +106,7 @@ const Interaction = styled.TouchableOpacity`
   background-color: ${({ active }) => (active ? '#2e64e515' : 'transparent')};
   border-radius: 5px;
   padding: 2px 5px;
+  margin-bottom: 5px;
 `;
 
 const InteractionText = styled.Text`
@@ -111,8 +117,7 @@ const InteractionText = styled.Text`
 `;
 
 const Bar = styled.View`
-  width: 100%;
   height: 2px;
   background-color: #ddd;
-  margin: 10px 0;
+  margin: 10px 15px;
 `;
