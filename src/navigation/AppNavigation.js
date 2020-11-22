@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import HomeScreen from '../screens/HomeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -12,7 +13,7 @@ const TabNav = () => (
   <Tab.Navigator initialRouteName="Home">
     <Tab.Screen
       name="Home"
-      component={StackNav}
+      component={StackHome}
       options={{
         tabBarIcon: ({ color, size }) => (
           <AntDesign name="home" color={color} size={size} />
@@ -21,7 +22,7 @@ const TabNav = () => (
     />
     <Tab.Screen
       name="Mensagens"
-      component={StackNav}
+      component={StackHome}
       options={{
         tabBarIcon: ({ color, size }) => (
           <AntDesign name="message1" color={color} size={size} />
@@ -30,7 +31,7 @@ const TabNav = () => (
     />
     <Tab.Screen
       name="Perfíl"
-      component={StackNav}
+      component={StackProfile}
       options={{
         tabBarIcon: ({ color, size }) => (
           <AntDesign name="user" color={color} size={size} />
@@ -39,11 +40,24 @@ const TabNav = () => (
     />
   </Tab.Navigator>
 );
-const StackNav = () => (
+
+const StackHome = () => (
   <Stack.Navigator initialRouteName="Home">
     <Stack.Screen
       name="Home"
       component={HomeScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+  </Stack.Navigator>
+);
+
+const StackProfile = () => (
+  <Stack.Navigator initialRouteName="Profile">
+    <Stack.Screen
+      name="Profile"
+      component={ProfileScreen}
       options={{
         headerShown: false,
       }}
