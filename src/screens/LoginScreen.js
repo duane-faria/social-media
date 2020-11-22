@@ -3,8 +3,12 @@ import { View, StyleSheet, Image, Text, Alert } from 'react-native';
 
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
+import { AuthContext } from '../navigation/AuthProvider';
 
 export default function LoginScreen(props) {
+  const { login } = React.useContext(AuthContext);
+  const [email, setEmail] = React.useState();
+  const [password, setPassword] = React.useState();
   return (
     <View style={styles.container}>
       <Image
@@ -18,13 +22,17 @@ export default function LoginScreen(props) {
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
       />
       <FormInput
         iconType="lock"
         placeholderText="Senha"
         secureTextEntry={true}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
       />
-      <FormButton title="ENTRAR" />
+      <FormButton title="ENTRAR" onPress={() => login(email, password)} />
       <Text
         style={styles.forgotPassword}
         onPress={() => Alert.alert('esqueci')}>

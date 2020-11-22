@@ -4,16 +4,15 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 
 import Navigator from './navigation';
-import LoginScreen from './screens/LoginScreen';
-
+import { AuthProvider } from './navigation/AuthProvider';
 const App = () => {
   return (
-    <>
+    <AuthProvider>
       <NavigationContainer>
         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
         <Navigator />
       </NavigationContainer>
-    </>
+    </AuthProvider>
   );
 };
 
