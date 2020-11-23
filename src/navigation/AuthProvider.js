@@ -1,6 +1,8 @@
 import React from 'react';
 import auth from '@react-native-firebase/auth';
 
+import * as firebase from '../services/firebase';
+
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -18,9 +20,16 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  async function register(email, password) {
+  async function register(userReg) {
     try {
-      await auth().createUserWithEmailAndPassword(email, password);
+      console.log(userReg);
+      const { email, password, name } = userReg;
+      const { user } = await auth().createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log(user);
+      firebase.post('users', { id: user.uid, name });
     } catch (e) {
       console.log(`error in register ${e}`);
     }

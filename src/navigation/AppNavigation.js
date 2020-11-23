@@ -9,7 +9,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddPostScreen from '../screens/AddPostScreen';
 import { AuthContext } from './AuthProvider';
-import { post } from '../services/firebase';
+import { post, postFile } from '../services/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MessageScreen from '../screens/MessageScreen';
 const Stack = createStackNavigator();
@@ -88,8 +88,10 @@ const StackHome = () => {
           headerRight: () => (
             <Text
               style={{ marginRight: 20, color: '#2e64e5', fontWeight: 'bold' }}
-              onPress={() => {
-                post('posts', { user: User.uid, postContent: postData });
+              onPress={async () => {
+                const { content } = postData;
+                const image = await postFile(postData.file);
+                await post('posts', { user: User.uid, content, image });
                 setPost(null);
                 navigation.push('Home');
               }}>

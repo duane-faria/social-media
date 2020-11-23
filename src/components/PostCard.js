@@ -16,16 +16,15 @@ export default function PostCard({ post }) {
             }}
           />
           <UserNameContainer>
-            <UserName>{post.userName}</UserName>
-            <PostTime>{post.postTime}</PostTime>
+            <UserName>Maria Melo</UserName>
+            <PostTime>ha 10 min</PostTime>
           </UserNameContainer>
         </UserInfo>
-        <PostText>{post.post}</PostText>
-        {post.postImage ? (
+        <PostText>{post.content}</PostText>
+        {post.image ? (
           <PostImage
             source={{
-              uri:
-                'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1308&q=80',
+              uri: post.image,
             }}
           />
         ) : (

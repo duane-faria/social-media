@@ -11,6 +11,7 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .required('campo obrigatório*')
     .email('insira um email válido*'),
+  name: Yup.string().required('campo obrigatório*'),
   password: Yup.string()
     .required('campo obrigatório*')
     .min(6, 'mínimo de 6 caracteres'),
@@ -33,11 +34,12 @@ export default function RegisterScreen(props) {
       <Formik
         initialValues={{
           email: '',
+          name: '',
           password: '',
           confirmPassword: '',
         }}
         onSubmit={(values) => {
-          register(values.email, values.password);
+          register(values);
         }}
         validationSchema={validationSchema}>
         {({
@@ -51,6 +53,19 @@ export default function RegisterScreen(props) {
           <>
             <FormInput
               iconType="user"
+              placeholderText="Nome"
+              autoCorrect={false}
+              value={values.name}
+              onChangeText={handleChange('name')}
+              error={errors.name}
+              touched={touched.name}
+              onBlur={() => setFieldTouched('name')}
+            />
+            {errors.name && touched.name && (
+              <Text style={{ color: 'tomato' }}>{errors.name}</Text>
+            )}
+            <FormInput
+              iconType="user"
               placeholderText="E-mail"
               keyboardType="email-address"
               autoCapitalize="none"
@@ -61,7 +76,7 @@ export default function RegisterScreen(props) {
               touched={touched.email}
               onBlur={() => setFieldTouched('email')}
             />
-            {errors.email && (
+            {errors.email && touched.email && (
               <Text style={{ color: 'tomato' }}>{errors.email}</Text>
             )}
 
@@ -75,7 +90,7 @@ export default function RegisterScreen(props) {
               touched={touched.password}
               onBlur={() => setFieldTouched('password')}
             />
-            {errors.password && (
+            {errors.password && touched.password && (
               <Text style={{ color: 'tomato' }}>{errors.password}</Text>
             )}
 
@@ -89,7 +104,7 @@ export default function RegisterScreen(props) {
               touched={touched.confirmPassword}
               onBlur={() => setFieldTouched('confirmPassword')}
             />
-            {errors.confirmPassword && (
+            {errors.confirmPassword && touched.confirmPassword && (
               <Text style={{ color: 'tomato' }}>{errors.confirmPassword}</Text>
             )}
 

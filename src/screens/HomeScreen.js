@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import styled from 'styled-components';
-
+import * as firebase from '../services/firebase';
 import PostCard from '../components/PostCard';
 
 const posts = [
@@ -38,10 +38,18 @@ const posts = [
 ];
 
 export default function HomeScreen() {
+  const [data, setData] = React.useState(null);
+  React.useEffect(() => {
+    function formatAndSet(val) {
+      setData(Object.values(val));
+    }
+    firebase.get('posts/', formatAndSet);
+  }, []);
+
   return (
     <Container>
       <FlatList
-        data={posts}
+        data={data}
         renderItem={({ item }) => <PostCard post={item} />}
         keyExtractor={(item) => String(item.id)}
         showsVerticalScrollIndicator={false}
