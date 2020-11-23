@@ -3,13 +3,20 @@ import styled from 'styled-components';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
+
+import { AuthContext } from '../navigation/AuthProvider';
+
 export default function AddPostScreen(props) {
+  const { setPost, post } = React.useContext(AuthContext);
+
   return (
     <InputWrapper>
       <InputField
         placeholder="O que está em sua mente?"
         multiline
         numberOfLines={4}
+        value={post}
+        onChangeText={(text) => setPost(text)}
       />
       <ActionButton buttonColor="rgba(231,76,60,1)">
         <ActionButton.Item
