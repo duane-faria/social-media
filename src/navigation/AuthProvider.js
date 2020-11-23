@@ -5,12 +5,15 @@ export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = React.useState(null);
+  const [loginError, setLoginError] = React.useState(false);
 
   async function login(email, password) {
     try {
-      const res = await auth().signInWithEmailAndPassword(email, password);
+      await auth().signInWithEmailAndPassword(email, password);
+      setLoginError(false);
     } catch (e) {
       console.log(`error in login ${e}`);
+      setLoginError(true);
     }
   }
 
@@ -31,7 +34,8 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, setUser, login, loginError, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

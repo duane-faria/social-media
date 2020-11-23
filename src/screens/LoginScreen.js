@@ -1,14 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, Image, Text, Alert } from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigation/AuthProvider';
 
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email(),
+  password: Yup.string().required().min(6),
+});
+
 export default function LoginScreen(props) {
-  const { login } = React.useContext(AuthContext);
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
+  const { login, loginError } = React.useContext(AuthContext);
+
   return (
     <View style={styles.container}>
       <Image
@@ -16,33 +22,69 @@ export default function LoginScreen(props) {
         style={styles.logo}
       />
       <Text style={styles.text}>Rede Social</Text>
-      <FormInput
-        iconType="user"
-        placeholderText="E-mail"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <FormInput
-        iconType="lock"
-        placeholderText="Senha"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <FormButton title="ENTRAR" onPress={() => login(email, password)} />
-      <Text
-        style={styles.forgotPassword}
-        onPress={() => Alert.alert('esqueci')}>
-        Esqueceu a senha?
-      </Text>
-      <Text
-        style={[styles.forgotPassword, { marginTop: 60 }]}
-        onPress={() => props.navigation.navigate('Register')}>
-        Não tem uma conta? Crie aqui
-      </Text>
+      {loginError && (
+        <Text style={{ fontSize: 20, color: 'tomato' }}>
+          Login ou senha inválidos.
+        </Text>
+      )}
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+        }}
+        onSubmit={(values) => {
+          login(values.email, values.password);
+        }}
+        validationSchema={validationSchema}>
+        {({
+          values,
+          handleChange,
+          handleSubmit,
+          errors,
+          touched,
+          setFieldTouched,
+          resetForm,
+        }) => (
+          <>
+            <FormInput
+              iconType="user"
+              placeholderText="E-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={values.email}
+              onChangeText={handleChange('email')}
+              error={errors.email}
+              touched={touched.email}
+              onBlur={() => setFieldTouched('email')}
+            />
+            <FormInput
+              iconType="lock"
+              placeholderText="Senha"
+              secureTextEntry={true}
+              value={values.password}
+              onChangeText={handleChange('password')}
+              error={errors.password}
+              touched={touched.password}
+              onBlur={() => setFieldTouched('password')}
+            />
+            <FormButton title="ENTRAR" onPress={handleSubmit} />
+            <Text
+              style={styles.forgotPassword}
+              onPress={() => Alert.alert('esqueci')}>
+              Esqueceu a senha?
+            </Text>
+            <Text
+              style={[styles.forgotPassword, { marginTop: 60 }]}
+              onPress={() => {
+                resetForm();
+                props.navigation.navigate('Register');
+              }}>
+              Não tem uma conta? Crie aqui
+            </Text>
+          </>
+        )}
+      </Formik>
     </View>
   );
 }

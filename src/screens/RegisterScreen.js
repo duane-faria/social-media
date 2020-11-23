@@ -1,14 +1,27 @@
 import React from 'react';
 import { Image, View, StyleSheet, Text } from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import { AuthContext } from '../navigation/AuthProvider';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .required('campo obrigatório*')
+    .email('insira um email válido*'),
+  password: Yup.string()
+    .required('campo obrigatório*')
+    .min(6, 'mínimo de 6 caracteres'),
+  confirmPassword: Yup.string()
+    .required('campo obrigatório*')
+    .min(6, 'mínimo de 6 caracteres')
+    .oneOf([Yup.ref('password'), null], 'As senhas precisam ser iguais'),
+});
+
 export default function RegisterScreen(props) {
   const { register } = React.useContext(AuthContext);
-  const [email, setEmail] = React.useState();
-  const [password, setPassword] = React.useState();
-  const [confPassword, setConfPassword] = React.useState();
 
   return (
     <View style={styles.container}>
@@ -17,37 +30,73 @@ export default function RegisterScreen(props) {
         style={styles.logo}
       />
       <Text style={styles.text}>Criar conta</Text>
-      <FormInput
-        iconType="user"
-        placeholderText="E-mail"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <FormInput
-        iconType="lock"
-        placeholderText="Senha"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-      />
-      <FormInput
-        iconType="lock"
-        placeholderText="Confirmar senha"
-        secureTextEntry={true}
-        value={confPassword}
-        onChangeText={(text) => setConfPassword(text)}
-      />
-      <FormButton
-        title="CADASTRAR"
-        onPress={() => {
-          console.log(email, password);
-          // return;
-          register(email, password);
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+          confirmPassword: '',
         }}
-      />
+        onSubmit={(values) => {
+          register(values.email, values.password);
+        }}
+        validationSchema={validationSchema}>
+        {({
+          values,
+          handleChange,
+          handleSubmit,
+          errors,
+          touched,
+          setFieldTouched,
+        }) => (
+          <>
+            <FormInput
+              iconType="user"
+              placeholderText="E-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+              value={values.email}
+              onChangeText={handleChange('email')}
+              error={errors.email}
+              touched={touched.email}
+              onBlur={() => setFieldTouched('email')}
+            />
+            {errors.email && (
+              <Text style={{ color: 'tomato' }}>{errors.email}</Text>
+            )}
+
+            <FormInput
+              iconType="lock"
+              placeholderText="Senha"
+              secureTextEntry={true}
+              value={values.password}
+              onChangeText={handleChange('password')}
+              error={errors.password}
+              touched={touched.password}
+              onBlur={() => setFieldTouched('password')}
+            />
+            {errors.password && (
+              <Text style={{ color: 'tomato' }}>{errors.password}</Text>
+            )}
+
+            <FormInput
+              iconType="lock"
+              placeholderText="Confirmar senha"
+              secureTextEntry={true}
+              value={values.confirmPassword}
+              onChangeText={handleChange('confirmPassword')}
+              error={errors.confirmPassword}
+              touched={touched.confirmPassword}
+              onBlur={() => setFieldTouched('confirmPassword')}
+            />
+            {errors.confirmPassword && (
+              <Text style={{ color: 'tomato' }}>{errors.confirmPassword}</Text>
+            )}
+
+            <FormButton title="CADASTRAR" onPress={handleSubmit} />
+          </>
+        )}
+      </Formik>
       <View style={styles.terms}>
         <Text style={{ color: 'grey' }}>Ao registrar você aceita os </Text>
         <Text style={{ color: '#e88832' }}>termos de uso</Text>

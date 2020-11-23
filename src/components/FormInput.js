@@ -7,10 +7,16 @@ export default function FormInput({
   labelValue,
   placeholderText,
   iconType,
+  error,
+  touched,
   ...props
 }) {
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        error && touched ? { borderColor: 'tomato' } : {},
+      ]}>
       <View style={styles.iconStyle}>
         <AntDesign name={iconType} size={25} color="#666" />
       </View>

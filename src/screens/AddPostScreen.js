@@ -32,7 +32,8 @@ const InputWrapper = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  background: #2e64e5;
+  /* background: #2e64e5; */
+  background: #2e64e515;
 `;
 
 const InputField = styled.TextInput`
