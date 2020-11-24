@@ -16,7 +16,7 @@ export default function AddPostScreen(props) {
     let options = {
       storageOptions: {
         skipBackup: true,
-        path: 'images',
+        path: 'socialapp',
       },
     };
     ImagePicker.launchImageLibrary(options, (response) => {
@@ -27,14 +27,15 @@ export default function AddPostScreen(props) {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        setImage({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
-        });
+        // setImage({
+        //   filePath: response,
+        //   fileData: response.data,
+        //   fileUri: response.uri,
+        // });
         let file = {
           name: response.fileName,
           path: response.path,
+          uri: response.uri,
         };
         setPost((p) => ({ ...p, file }));
       }
@@ -56,14 +57,15 @@ export default function AddPostScreen(props) {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        setImage({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
-        });
+        // setImage({
+        //   filePath: response,
+        //   fileData: response.data,
+        //   fileUri: response.uri,
+        // });
         let file = {
           name: response.fileName,
           path: response.path,
+          uri: response.uri,
         };
         setPost((p) => ({ ...p, file }));
       }
@@ -76,12 +78,9 @@ export default function AddPostScreen(props) {
         multiline
         numberOfLines={4}
         value={post}
-        onChangeText={
-          (text) => setPost((post) => ({ ...post, content: text }))
-          // setPost((post) => ({ postContent: text }))
-        }
+        onChangeText={(text) => setPost((post) => ({ ...post, content: text }))}
       />
-      {image && <PostImage source={{ uri: image.fileUri }} />}
+      {post.file.uri && <PostImage source={{ uri: post.file.uri }} />}
       <ActionButton buttonColor="rgba(231,76,60,1)">
         <ActionButton.Item
           buttonColor="#9b59b6"

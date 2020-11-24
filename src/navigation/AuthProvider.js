@@ -22,14 +22,12 @@ export const AuthProvider = ({ children }) => {
 
   async function register(userReg) {
     try {
-      console.log(userReg);
       const { email, password, name } = userReg;
       const { user } = await auth().createUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(user);
-      firebase.post('users', { id: user.uid, name });
+      firebase.post(`users/${user.uid}`, { id: user.uid, name });
     } catch (e) {
       console.log(`error in register ${e}`);
     }

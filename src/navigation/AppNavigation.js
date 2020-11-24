@@ -90,8 +90,13 @@ const StackHome = () => {
               style={{ marginRight: 20, color: '#2e64e5', fontWeight: 'bold' }}
               onPress={async () => {
                 const { content } = postData;
-                const image = await postFile(postData.file);
-                await post('posts', { user: User.uid, content, image });
+                const time = new Date().getTime();
+                if (postData.file) {
+                  const image = await postFile(postData.file);
+                  await post('posts', { user: User.uid, content, image, time });
+                } else {
+                  await post('posts', { user: User.uid, content, time });
+                }
                 setPost(null);
                 navigation.push('Home');
               }}>
