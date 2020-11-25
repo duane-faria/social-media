@@ -21,6 +21,15 @@ export const get = async (endpoint, callback) => {
     .once('value', (snp) => callback(snp.val()));
 };
 
+export const put = async (endpoint, data) => {
+  try {
+    await database().ref(endpoint).update(data);
+    return true;
+  } catch (e) {
+    console.log('error no update do firebase' + e);
+  }
+};
+
 export const currentUser = () => {
   return auth().currentUser();
 };

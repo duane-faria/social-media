@@ -1,6 +1,16 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
+import {
+  parseISO,
+  differenceInSeconds,
+  differenceInMinutes,
+  differenceInHours,
+  differenceInDays,
+  parse,
+  toDate,
+} from 'date-fns';
+
 import * as firebase from '../services/firebase';
 import PostCard from '../components/PostCard';
 
@@ -39,9 +49,43 @@ const posts = [
 
 export default function HomeScreen() {
   const [data, setData] = React.useState(null);
+
   React.useEffect(() => {
     function formatAndSet(val) {
-      setData(Object.values(val));
+      const ids = Object.keys(val);
+      let newData = [];
+      function formatDate(timestamp) {
+        const date = toDate(timestamp);
+        let difInSeconds = differenceInSeconds(new Date(), date);
+        let difInMinutes = differenceInMinutes(new Date(), date);
+        let difInHours = differenceInHours(new Date(), date);
+        let difInDays = differenceInDays(new Date(), date);
+
+        if (difInSeconds < 60) {
+          return 'há ' + difInSeconds + ' segundos';
+        } else if (difInMinutes < 60) {
+          return 'há ' + difInMinutes + ' minutos';
+        } else if (difInHours < 24) {
+          return 'há ' + difInHours + ' horas';
+        } else {
+          return 'há ' + difInDays + ' dias';
+        }
+      }
+      Object.values(val).map((item, index) => {
+        firebase.get(`users/${item.user}`, (val) => {
+          let User = Object.values(val)[0];
+          newData = [
+            ...newData,
+            {
+              ...item,
+              timeLabel: formatDate(item.time),
+              id: ids[index],
+              user: { ...User },
+            },
+          ];
+          setData(newData);
+        });
+      });
     }
     firebase.get('posts/', formatAndSet);
   }, []);

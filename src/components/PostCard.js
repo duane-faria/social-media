@@ -16,8 +16,8 @@ export default function PostCard({ post }) {
             }}
           />
           <UserNameContainer>
-            <UserName>Maria Melo</UserName>
-            <PostTime>ha 10 min</PostTime>
+            <UserName>{post.user.name}</UserName>
+            <PostTime>{post.timeLabel}</PostTime>
           </UserNameContainer>
         </UserInfo>
         <PostText>{post.content}</PostText>
@@ -26,6 +26,7 @@ export default function PostCard({ post }) {
             source={{
               uri: post.image,
             }}
+            resizeMode="contain"
           />
         ) : (
           <Bar />
@@ -88,7 +89,7 @@ const PostText = styled.Text`
 
 const PostImage = styled.Image`
   width: 100%;
-  height: 250px;
+  height: 600px;
   margin-top: 15px;
 `;
 

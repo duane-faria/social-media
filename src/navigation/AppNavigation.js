@@ -45,6 +45,7 @@ const TabNav = () => (
     />
   </Tab.Navigator>
 );
+import { CommonActions } from '@react-navigation/native';
 
 const StackHome = () => {
   const { post: postData, setPost, user: User } = React.useContext(AuthContext);
@@ -98,7 +99,20 @@ const StackHome = () => {
                   await post('posts', { user: User.uid, content, time });
                 }
                 setPost(null);
-                navigation.push('Home');
+                // navigation.push('Home');
+                // navigation.reseet
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [
+                      { name: 'Home' },
+                      {
+                        name: 'Profile',
+                        params: { user: 'jane' },
+                      },
+                    ],
+                  })
+                );
               }}>
               Postar
             </Text>

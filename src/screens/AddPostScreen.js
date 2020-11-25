@@ -2,15 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import { utils } from '@react-native-firebase/app';
-import { postFile } from '../services/firebase';
 import { AuthContext } from '../navigation/AuthProvider';
 
 export default function AddPostScreen(props) {
   const { setPost, post } = React.useContext(AuthContext);
-  const [image, setImage] = React.useState(null);
 
   const launchImageLibrary = () => {
     let options = {
@@ -27,11 +24,6 @@ export default function AddPostScreen(props) {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // setImage({
-        //   filePath: response,
-        //   fileData: response.data,
-        //   fileUri: response.uri,
-        // });
         let file = {
           name: response.fileName,
           path: response.path,
@@ -57,11 +49,6 @@ export default function AddPostScreen(props) {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        // setImage({
-        //   filePath: response,
-        //   fileData: response.data,
-        //   fileUri: response.uri,
-        // });
         let file = {
           name: response.fileName,
           path: response.path,
@@ -80,7 +67,9 @@ export default function AddPostScreen(props) {
         value={post}
         onChangeText={(text) => setPost((post) => ({ ...post, content: text }))}
       />
-      {post.file.uri && <PostImage source={{ uri: post.file.uri }} />}
+      {post && post.file && (
+        <PostImage source={{ uri: post.file.uri }} resizeMode="contain" />
+      )}
       <ActionButton buttonColor="rgba(231,76,60,1)">
         <ActionButton.Item
           buttonColor="#9b59b6"
