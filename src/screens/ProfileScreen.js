@@ -15,8 +15,9 @@ export default function ProfileScreen(props) {
   React.useEffect(() => {
     async function call() {
       const userData = await firebase.get(`/users/${user.uid}`);
-      console.log(userData.profileImage);
-      setFile({ uri: userData.profileImage });
+      if (userData.profileImage) {
+        setFile({ uri: userData.profileImage });
+      }
     }
     call();
   }, [user]);

@@ -1,14 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, Text } from 'react-native';
+import styled from 'styled-components/native';
 
 export default function MessageScreen(props) {
   return (
-    <View style={styles.container}>
+    <View>
       <Text>Mensagens</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});

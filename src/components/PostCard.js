@@ -8,11 +8,11 @@ import { AuthContext } from '../navigation/AuthProvider';
 
 export default function PostCard({ post }) {
   const { user } = React.useContext(AuthContext);
-  let liked = false;
+  const [liked, setLiked] = React.useState(false);
 
   const currentUserLiked = post.likes.filter((li) => li === user.uid);
   if (currentUserLiked.length > 0) {
-    liked = true;
+    setLiked(true);
   }
 
   const likeIcon = liked ? 'heart' : 'heart-outline';
@@ -60,9 +60,16 @@ export default function PostCard({ post }) {
             active={liked}
             onPress={() => {
               console.log(post.id);
-              firebase.put(`/posts/${post.id}`, {
-                likes: [user.uid],
-              });
+              setLiked(true);
+              if (post.likes) {
+                firebase.put(`/posts/${post.id}`, {
+                  likes: [...post.likes, user.uid],
+                });
+              } else {
+                firebase.put(`/posts/${post.id}`, {
+                  likes: [user.uid],
+                });
+              }
             }}>
             <Ionicons name={likeIcon} size={25} color={likeIconColor} />
             <InteractionText active={liked}>

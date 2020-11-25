@@ -2,50 +2,15 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components';
 import {
-  parseISO,
   differenceInSeconds,
   differenceInMinutes,
   differenceInHours,
   differenceInDays,
-  parse,
   toDate,
 } from 'date-fns';
 
 import * as firebase from '../services/firebase';
 import PostCard from '../components/PostCard';
-
-const posts = [
-  {
-    id: 1,
-    userName: 'Rafaela Almeida',
-    postTime: 'há 5 min',
-    post: 'Olá esse é um post',
-    postImage: 'wadwadwadawdwwadawdawdawda',
-    liked: true,
-    likes: 0,
-    comments: 0,
-  },
-  {
-    id: 2,
-    userName: 'Jessica Albuquerque',
-    postTime: 'há 5 min',
-    post: 'Olá esse é um post',
-    postImage: null,
-    liked: false,
-    likes: 0,
-    comments: 0,
-  },
-  {
-    id: 3,
-    userName: 'Ashley',
-    postTime: 'há 5 min',
-    post: 'Olá esse é um post',
-    postImage: '1',
-    liked: false,
-    likes: 0,
-    comments: 0,
-  },
-];
 
 export default function HomeScreen() {
   const [data, setData] = React.useState(null);
