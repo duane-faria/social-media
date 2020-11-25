@@ -73,10 +73,7 @@ export default function HomeScreen() {
       }
       Object.values(val).map(async (item, index) => {
         let User = await firebase.get(`/users/${item.user}`);
-        // (val) => {
-        // let User = Object.values(val)[0];
-        // let User = val;
-        // console.log(user, 'AQUI');
+
         newData = [
           ...newData,
           {
@@ -87,7 +84,6 @@ export default function HomeScreen() {
           },
         ];
         setData(newData);
-        // }
       });
     }
     async function call() {

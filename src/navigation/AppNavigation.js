@@ -94,23 +94,22 @@ const StackHome = () => {
                 const time = new Date().getTime();
                 if (postData.file) {
                   const image = await postFile(postData.file);
-                  await post('posts', { user: User.uid, content, image, time });
+                  await post('/posts', {
+                    user: User.uid,
+                    content,
+                    image,
+                    time,
+                  });
                 } else {
-                  await post('posts', { user: User.uid, content, time });
+                  console.log(postData);
+                  // console.log({ user: User.uid, content, time });
+                  await post('/posts', { user: User.uid, content, time });
                 }
                 setPost(null);
-                // navigation.push('Home');
-                // navigation.reseet
                 navigation.dispatch(
                   CommonActions.reset({
                     index: 1,
-                    routes: [
-                      { name: 'Home' },
-                      {
-                        name: 'Profile',
-                        params: { user: 'jane' },
-                      },
-                    ],
+                    routes: [{ name: 'Home' }],
                   })
                 );
               }}>

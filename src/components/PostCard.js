@@ -1,10 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Image } from 'react-native';
+
+import * as firebase from '../services/firebase';
+import { AuthContext } from '../navigation/AuthProvider';
 
 export default function PostCard({ post }) {
-  const likeIcon = post.liked ? 'heart' : 'heart-outline';
-  const likeIconColor = post.liked ? '#2e64e5' : '#333';
+  const { user } = React.useContext(AuthContext);
+  let liked = false;
+
+  const currentUserLiked = post.likes.filter((li) => li === user.uid);
+  if (currentUserLiked.length > 0) {
+    liked = true;
+  }
+
+  const likeIcon = liked ? 'heart' : 'heart-outline';
+  const likeIconColor = liked ? '#2e64e5' : '#333';
+
+  console.log(currentUserLiked);
+
   return (
     <>
       <Container>
@@ -34,15 +49,25 @@ export default function PostCard({ post }) {
             source={{
               uri: post.image,
             }}
+            style={{ aspectRatio: 1 }}
             resizeMode="contain"
           />
         ) : (
           <Bar />
         )}
         <InteractionContainer>
-          <Interaction active={post.liked}>
+          <Interaction
+            active={liked}
+            onPress={() => {
+              console.log(post.id);
+              firebase.put(`/posts/${post.id}`, {
+                likes: [user.uid],
+              });
+            }}>
             <Ionicons name={likeIcon} size={25} color={likeIconColor} />
-            <InteractionText active={post.liked}>Like</InteractionText>
+            <InteractionText active={liked}>
+              {post.likes ? post.likes.length + ' Likes' : 'Like'}
+            </InteractionText>
           </Interaction>
           <Interaction>
             <Ionicons name="md-chatbubble-outline" size={25} />
@@ -97,7 +122,7 @@ const PostText = styled.Text`
 
 const PostImage = styled.Image`
   width: 100%;
-  height: 600px;
+  /* height: auto; */
   margin-top: 15px;
 `;
 

@@ -4,10 +4,16 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { FloatingAction } from 'react-native-floating-action';
+
 import { AuthContext } from '../navigation/AuthProvider';
 
-export default function AddPostScreen(props) {
+export default function AddPostScreen() {
   const { setPost, post } = React.useContext(AuthContext);
+
+  React.useEffect(() => {
+    return setPost(null);
+  }, [setPost]);
 
   const launchImageLibrary = () => {
     let options = {
@@ -65,25 +71,55 @@ export default function AddPostScreen(props) {
         multiline
         numberOfLines={4}
         value={post}
-        onChangeText={(text) => setPost((post) => ({ ...post, content: text }))}
+        onChangeText={
+          (text) =>
+            // console.log(text);
+            setPost((p) => ({ ...p, content: text }))
+          // console.log({ ...post, content: text });
+          // return text;
+        }
       />
       {post && post.file && (
         <PostImage source={{ uri: post.file.uri }} resizeMode="contain" />
       )}
-      <ActionButton buttonColor="rgba(231,76,60,1)">
-        <ActionButton.Item
-          buttonColor="#9b59b6"
-          title="Tirar uma foto"
-          onPress={() => launchCamera()}>
-          <Icon name="camera-outline" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#3498db"
-          title="Escolher foto"
-          onPress={() => launchImageLibrary()}>
-          <Icon name="md-images-outline" style={styles.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton>
+
+      <FloatingAction
+        actions={[
+          {
+            text: 'Escolher foto',
+            icon: (
+              <Icon name="md-images-outline" style={styles.actionButtonIcon} />
+            ),
+            name: 'bt_choose',
+            position: 2,
+            buttonSize: 59,
+            distanceToEdge: 22,
+            onPressItem: () => launchImageLibrary(),
+          },
+          {
+            text: 'Tirar foto',
+            icon: (
+              <Icon
+                name="camera-outline"
+                style={styles.actionButtonIcon}
+                size={120}
+              />
+            ),
+            name: 'bt_take',
+            position: 1,
+            buttonSize: 59,
+            distanceToEdge: 22,
+            onPressItem: launchCamera,
+          },
+        ]}
+        onPressItem={(name) => {
+          if (name === 'bt_choose') {
+            launchImageLibrary();
+          } else {
+            launchCamera();
+          }
+        }}
+      />
     </InputWrapper>
   );
 }
@@ -107,8 +143,8 @@ const PostImage = styled.Image`
 `;
 const styles = StyleSheet.create({
   actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
+    fontSize: 28,
+    height: 28,
     color: 'white',
   },
 });
