@@ -9,12 +9,20 @@ export default function PostCard({ post }) {
     <>
       <Container>
         <UserInfo>
-          <UserImage
-            source={{
-              uri:
-                'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1533&q=80',
-            }}
-          />
+          {post.user.profileImage ? (
+            <UserImage
+              source={{
+                uri: post.user.profileImage,
+              }}
+            />
+          ) : (
+            <UserImage
+              source={{
+                uri:
+                  'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1533&q=80',
+              }}
+            />
+          )}
           <UserNameContainer>
             <UserName>{post.user.name}</UserName>
             <PostTime>{post.timeLabel}</PostTime>

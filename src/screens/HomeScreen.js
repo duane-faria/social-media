@@ -71,23 +71,30 @@ export default function HomeScreen() {
           return 'há ' + difInDays + ' dias';
         }
       }
-      Object.values(val).map((item, index) => {
-        firebase.get(`users/${item.user}`, (val) => {
-          let User = Object.values(val)[0];
-          newData = [
-            ...newData,
-            {
-              ...item,
-              timeLabel: formatDate(item.time),
-              id: ids[index],
-              user: { ...User },
-            },
-          ];
-          setData(newData);
-        });
+      Object.values(val).map(async (item, index) => {
+        let User = await firebase.get(`/users/${item.user}`);
+        // (val) => {
+        // let User = Object.values(val)[0];
+        // let User = val;
+        // console.log(user, 'AQUI');
+        newData = [
+          ...newData,
+          {
+            ...item,
+            timeLabel: formatDate(item.time),
+            id: ids[index],
+            user: { ...User },
+          },
+        ];
+        setData(newData);
+        // }
       });
     }
-    firebase.get('posts/', formatAndSet);
+    async function call() {
+      const val = await firebase.get('posts/');
+      formatAndSet(val);
+    }
+    call();
   }, []);
 
   return (

@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         email,
         password
       );
-      firebase.post(`users/${user.uid}`, { id: user.uid, name });
+      firebase.postWithRef(`/users/${user.uid}`, { id: user.uid, name });
     } catch (e) {
       console.log(`error in register ${e}`);
     }

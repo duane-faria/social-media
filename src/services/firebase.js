@@ -7,6 +7,10 @@ export const post = async (endpoint, data) => {
   await newRef.set(data);
 };
 
+export const postWithRef = async (endpoint, data) => {
+  await database().ref(endpoint).set(data);
+};
+
 export const postFile = async (file) => {
   const reference = storage().ref(file.name);
   await reference.putFile(file.path);
@@ -16,9 +20,14 @@ export const postFile = async (file) => {
 };
 
 export const get = async (endpoint, callback) => {
-  const data = await database()
-    .ref(endpoint)
-    .once('value', (snp) => callback(snp.val()));
+  return new Promise((resolve, reject) => {
+    database()
+      .ref(endpoint)
+      .once('value', (snp) => resolve(snp.val()));
+  });
+  // const data = await database()
+  //   .ref(endpoint)
+  //   .once('value', (snp) => callback(snp.val()));
 };
 
 export const put = async (endpoint, data) => {
