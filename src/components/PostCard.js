@@ -1,24 +1,45 @@
 import React from 'react';
 import styled from 'styled-components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Image } from 'react-native';
 
 import * as firebase from '../services/firebase';
 import { AuthContext } from '../navigation/AuthProvider';
 
-export default function PostCard({ post }) {
+export default function PostCard({ index, post, setLikes }) {
   const { user } = React.useContext(AuthContext);
   const [liked, setLiked] = React.useState(false);
 
-  const currentUserLiked = post.likes.filter((li) => li === user.uid);
-  if (currentUserLiked.length > 0) {
-    setLiked(true);
+  React.useEffect(() => {
+    if (post.likes) {
+      let tmp = post.likes.some((li) => li === user.uid);
+      if (tmp) {
+        setLiked(true);
+      }
+    }
+  }, [post.likes, user.uid]);
+
+  function handleLike() {
+    if (liked) {
+      setLiked(false);
+      setLikes(index, user.uid, false);
+    } else {
+      setLiked(true);
+      setLikes(index, user.uid, true);
+    }
+
+    if (post.likes) {
+      firebase.put(`/posts/${post.id}`, {
+        likes: [...post.likes],
+      });
+    } else if (liked === false) {
+      firebase.put(`/posts/${post.id}`, {
+        likes: [user.uid],
+      });
+    }
   }
 
   const likeIcon = liked ? 'heart' : 'heart-outline';
   const likeIconColor = liked ? '#2e64e5' : '#333';
-
-  console.log(currentUserLiked);
 
   return (
     <>
@@ -56,21 +77,7 @@ export default function PostCard({ post }) {
           <Bar />
         )}
         <InteractionContainer>
-          <Interaction
-            active={liked}
-            onPress={() => {
-              console.log(post.id);
-              setLiked(true);
-              if (post.likes) {
-                firebase.put(`/posts/${post.id}`, {
-                  likes: [...post.likes, user.uid],
-                });
-              } else {
-                firebase.put(`/posts/${post.id}`, {
-                  likes: [user.uid],
-                });
-              }
-            }}>
+          <Interaction active={liked} onPress={() => handleLike()}>
             <Ionicons name={likeIcon} size={25} color={likeIconColor} />
             <InteractionText active={liked}>
               {post.likes ? post.likes.length + ' Likes' : 'Like'}

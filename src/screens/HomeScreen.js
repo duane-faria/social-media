@@ -15,6 +15,24 @@ import PostCard from '../components/PostCard';
 export default function HomeScreen() {
   const [data, setData] = React.useState(null);
 
+  function setLikes(index, userId, increase) {
+    let newData = data;
+    if (increase) {
+      if (!newData[index].likes) {
+        newData[index].likes = [];
+      }
+      newData[index].likes.push(userId);
+    } else {
+      let i = newData[index].likes.findIndex((d) => d === userId);
+      if (i !== -1) {
+        newData[index].likes = newData[index].likes.filter(
+          (likeItem, likeIndex) => likeIndex !== i
+        );
+      }
+    }
+    setData(newData);
+  }
+
   React.useEffect(() => {
     function formatAndSet(val) {
       const ids = Object.keys(val);
@@ -62,7 +80,9 @@ export default function HomeScreen() {
     <Container>
       <FlatList
         data={data}
-        renderItem={({ item }) => <PostCard post={item} />}
+        renderItem={({ item, index }) => (
+          <PostCard index={index} post={item} setLikes={setLikes} />
+        )}
         keyExtractor={(item) => String(item.id)}
         showsVerticalScrollIndicator={false}
       />

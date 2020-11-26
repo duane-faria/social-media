@@ -71,12 +71,8 @@ export default function AddPostScreen() {
         multiline
         numberOfLines={4}
         value={post}
-        onChangeText={
-          (text) =>
-            // console.log(text);
-            setPost((p) => ({ ...p, content: text }))
-          // console.log({ ...post, content: text });
-          // return text;
+        onChange={(e) =>
+          setPost((p) => ({ ...p, content: e.nativeEvent.text }))
         }
       />
       {post && post.file && (
