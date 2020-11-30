@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Alert, Text } from 'react-native';
+import { Alert, Text, Keyboard } from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -90,8 +90,13 @@ const StackHome = () => {
             <Text
               style={{ marginRight: 20, color: '#2e64e5', fontWeight: 'bold' }}
               onPress={async () => {
+                if (!postData) {
+                  setPost((p) => ({ ...p, error: 'Insira algo ' }));
+                  return;
+                }
                 const { content } = postData;
                 const time = new Date().getTime();
+                Keyboard.dismiss();
                 if (postData.file) {
                   const image = await postFile(postData.file);
                   await post('/posts', {
@@ -101,10 +106,9 @@ const StackHome = () => {
                     time,
                   });
                 } else {
-                  console.log(postData);
-                  // console.log({ user: User.uid, content, time });
                   await post('/posts', { user: User.uid, content, time });
                 }
+
                 setPost(null);
                 navigation.dispatch(
                   CommonActions.reset({

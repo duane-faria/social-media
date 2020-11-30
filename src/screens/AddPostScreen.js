@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { StyleSheet } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Platform } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { FloatingAction } from 'react-native-floating-action';
 
@@ -66,6 +65,7 @@ export default function AddPostScreen() {
   }
   return (
     <InputWrapper>
+      {post && post.error && <Error>o post não pode ser vazio</Error>}
       <InputField
         placeholder="O que está em sua mente?"
         multiline
@@ -133,10 +133,17 @@ const InputField = styled.TextInput`
   font-size: 24px;
   text-align: center;
 `;
+
 const PostImage = styled.Image`
   width: 100%;
   height: 350px;
 `;
+
+const Error = styled.Text`
+  color: tomato;
+  font-size: 15px;
+`;
+
 const styles = StyleSheet.create({
   actionButtonIcon: {
     fontSize: 28,
