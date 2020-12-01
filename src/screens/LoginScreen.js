@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, Alert, Keyboard } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -33,6 +33,8 @@ export default function LoginScreen(props) {
           password: '',
         }}
         onSubmit={(values) => {
+          Keyboard.dismiss();
+
           login(values.email, values.password);
         }}
         validationSchema={validationSchema}>
@@ -95,6 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
+    backgroundColor: '#fff',
   },
   logo: {
     width: 120,

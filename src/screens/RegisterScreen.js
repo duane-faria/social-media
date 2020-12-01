@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, StyleSheet, Text } from 'react-native';
+import { Image, View, StyleSheet, Text, Keyboard } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -39,6 +39,7 @@ export default function RegisterScreen(props) {
           confirmPassword: '',
         }}
         onSubmit={(values) => {
+          Keyboard.dismiss();
           register(values);
         }}
         validationSchema={validationSchema}>

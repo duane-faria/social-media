@@ -52,12 +52,13 @@ export default function PostCard({ index, post, setLikes }) {
               }}
             />
           ) : (
-            <UserImage
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1533&q=80',
-              }}
-            />
+            // <UserImage
+            //   source={{
+            //     uri:
+            //       'https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1533&q=80',
+            //   }}
+            // />
+            <FakeImage />
           )}
           <UserNameContainer>
             <UserName>{post.user.name}</UserName>
@@ -167,4 +168,11 @@ const Bar = styled.View`
   height: 2px;
   background-color: #ddd;
   margin: 10px 15px;
+`;
+
+const FakeImage = styled.View`
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: white;
 `;

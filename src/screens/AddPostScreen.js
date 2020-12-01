@@ -1,14 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { KeyboardAvoidingView, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, LogBox } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { FloatingAction } from 'react-native-floating-action';
 
 import { AuthContext } from '../navigation/AuthProvider';
+import Spinner from '../components/Spinner';
 
 export default function AddPostScreen() {
   const { setPost, post } = React.useContext(AuthContext);
+  const [content, setContent] = React.useState('');
+
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 
   React.useEffect(() => {
     return setPost(null);
@@ -66,14 +70,16 @@ export default function AddPostScreen() {
   return (
     <InputWrapper>
       {post && post.error && <Error>o post não pode ser vazio</Error>}
+      {post && post.loading && <Spinner />}
       <InputField
         placeholder="O que está em sua mente?"
         multiline
         numberOfLines={4}
-        value={post}
-        onChange={(e) =>
-          setPost((p) => ({ ...p, content: e.nativeEvent.text }))
-        }
+        value={content || (post && post.content)}
+        onChange={(e) => {
+          setPost((p) => ({ ...p, content: e.nativeEvent.text }));
+          setContent(e.nativeEvent.text);
+        }}
       />
       {post && post.file && (
         <PostImage source={{ uri: post.file.uri }} resizeMode="contain" />

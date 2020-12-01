@@ -4,24 +4,28 @@ import {
   Text,
   FlatList,
   Keyboard,
-  Image,
   ScrollView,
+  LogBox,
 } from 'react-native';
 import styled from 'styled-components/native';
-import { GiftedChat } from 'react-native-gifted-chat';
 
-import ChatList from '../components/ChatList';
 import * as firebase from '../services/firebase';
 import { AuthContext } from '../navigation/AuthProvider';
+import Spinner from '../components/Spinner';
 
 export default function MessageScreen(props) {
+  const [loading, setLoading] = React.useState(false);
   const [User, setUser] = React.useState([]);
   const [allUsers, setAllUsers] = React.useState([]);
   const [messages, setMessages] = React.useState([]);
   const [message, setMessage] = React.useState();
   const { user } = React.useContext(AuthContext);
+  const scroll = React.useRef();
+  LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
 
   React.useEffect(() => {
+    setLoading(true);
+
     async function makeGet() {
       let res = await firebase.get(`/users/${user.uid}`);
       let allusers = await firebase.get('/users');
@@ -32,12 +36,14 @@ export default function MessageScreen(props) {
         email: user.email,
         name: res.name,
       });
+      setLoading(false);
     }
     makeGet();
+    return makeGet;
   }, [user]);
 
   async function sendMessage(text) {
-    if (text.length > 0) {
+    if (text) {
       Keyboard.dismiss();
       const obj = {
         _id: Math.random().toString().split('.')[1],
@@ -51,6 +57,7 @@ export default function MessageScreen(props) {
   }
 
   React.useEffect(() => {
+    setLoading(true);
     function getMessages(m) {
       if (m) {
         const mTreated = Object.values(m).sort((a, b) => {
@@ -61,14 +68,29 @@ export default function MessageScreen(props) {
           }
         });
         setMessages(mTreated);
+        setLoading(false);
       }
     }
     firebase.realTimeGet('messages/', getMessages);
+    scroll.current.scrollToEnd();
   }, []);
 
   return (
-    <View style={{ position: 'relative', flex: 1, marginTop: 20 }}>
-      <ScrollView style={{ marginBottom: 120 }}>
+    <View
+      style={{
+        position: 'relative',
+        flex: 1,
+        paddingTop: 20,
+        backgroundColor: 'white',
+      }}>
+      {loading && <Spinner />}
+
+      <ScrollView
+        style={{ marginBottom: 120 }}
+        ref={scroll}
+        onContentSizeChange={() =>
+          scroll.current.scrollToEnd({ animated: true })
+        }>
         {messages &&
           messages.map((messa) => {
             let current = false;
@@ -119,7 +141,8 @@ const ChatArea = styled.View`
   justify-content: space-between;
   padding: 0 20px;
   align-items: center;
-  background-color: #f8f8f8;
+  /* background-color: #f8f8f8; */
+  background-color: #f1f6f9;
   border-color: #b2b2b2;
   position: absolute;
   bottom: 0;
@@ -127,7 +150,9 @@ const ChatArea = styled.View`
 
 const TextArea = styled.TextInput``;
 const ButtonContainer = styled.TouchableOpacity``;
-const ButtonText = styled.Text``;
+const ButtonText = styled.Text`
+  color: #14274e;
+`;
 const UserImage = styled.Image`
   width: 40px;
   height: 40px;

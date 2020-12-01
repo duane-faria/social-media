@@ -11,9 +11,13 @@ import {
 
 import * as firebase from '../services/firebase';
 import PostCard from '../components/PostCard';
+import Spinner from '../components/Spinner';
+import { AuthContext } from '../navigation/AuthProvider';
 
 export default function HomeScreen() {
   const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const { user } = React.useContext(AuthContext);
 
   function setLikes(index, userId, increase) {
     let newData = data;
@@ -35,6 +39,10 @@ export default function HomeScreen() {
 
   React.useEffect(() => {
     function formatAndSet(val) {
+      if (!val) {
+        setLoading(false);
+        return;
+      }
       const ids = Object.keys(val);
       let newData = [];
       function formatDate(timestamp) {
@@ -54,7 +62,14 @@ export default function HomeScreen() {
           return 'há ' + difInDays + ' dias';
         }
       }
-      Object.values(val).map(async (item, index) => {
+      const treating = Object.values(val).sort((a, b) => {
+        if (new Date(a.time) < new Date(b.time)) {
+          return 1;
+        } else if (new Date(a.time) > new Date(b.time)) {
+          return -1;
+        }
+      });
+      treating.map(async (item, index) => {
         let User = await firebase.get(`/users/${item.user}`);
 
         newData = [
@@ -67,25 +82,40 @@ export default function HomeScreen() {
           },
         ];
         setData(newData);
+        setLoading(false);
       });
     }
+
     async function call() {
+      setLoading(true);
       const val = await firebase.get('posts/');
+      // const unsub = firebase.realTimeGet('posts/', formatAndSet);
       formatAndSet(val);
+      // setLoading(false);
+      // return unsub;
     }
     call();
+    return () => setData(null);
   }, []);
 
   return (
     <Container>
-      <FlatList
-        data={data}
-        renderItem={({ item, index }) => (
-          <PostCard index={index} post={item} setLikes={setLikes} />
-        )}
-        keyExtractor={(item) => String(item.id)}
-        showsVerticalScrollIndicator={false}
-      />
+      {loading ? (
+        <Spinner />
+      ) : !data ? (
+        <NoPostContainer>
+          <NoPost>Nenhum post cadastrado ainda :c</NoPost>
+        </NoPostContainer>
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={({ item, index }) => (
+            <PostCard index={index} post={item} setLikes={setLikes} />
+          )}
+          keyExtractor={(item) => String(item.id)}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </Container>
   );
 }
@@ -94,4 +124,14 @@ const Container = styled.View`
   flex: 1;
   padding: 10px;
   background-color: #fff;
+`;
+const NoPostContainer = styled.View`
+  flex: 1;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NoPost = styled.Text`
+  font-size: 20px;
 `;

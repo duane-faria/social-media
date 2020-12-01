@@ -31,11 +31,13 @@ export const get = async (endpoint) => {
 };
 
 export const realTimeGet = async (endpoint, callback) => {
-  database()
+  const onValueChange = database()
     .ref(endpoint)
     .on('value', (snapshot) => {
       callback(snapshot.val());
     });
+
+  return () => database().ref(endpoint).off('value', onValueChange);
 };
 
 export const put = async (endpoint, data) => {

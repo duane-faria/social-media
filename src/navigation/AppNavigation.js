@@ -15,7 +15,12 @@ import MessageScreen from '../screens/MessageScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const TabNav = () => (
-  <Tab.Navigator initialRouteName="Home">
+  <Tab.Navigator
+    initialRouteName="Home"
+    tabBarOptions={{
+      activeTintColor: '#14274e',
+      inactiveTintColor: 'gray',
+    }}>
     <Tab.Screen
       name="Home"
       component={StackHome}
@@ -63,7 +68,8 @@ const StackHome = () => {
           },
           headerTitleAlign: 'center',
           headerTitleStyle: {
-            color: '#2e64e5',
+            // color: '#2e64e5',
+            color: '#394867',
             fontWeight: 'bold',
             fontFamily: 'RobotoSlab-Bold',
           },
@@ -74,7 +80,8 @@ const StackHome = () => {
                 name="plus"
                 size={20}
                 style={{ marginRight: 25 }}
-                color="#2e64e5"
+                // color="#2e64e5"
+                color="#394867"
               />
             </TouchableOpacity>
           ),
@@ -86,10 +93,12 @@ const StackHome = () => {
         options={({ navigation }) => ({
           title: '',
           headerTransparent: true,
+          headerTintColor: '#14274e',
           headerRight: () => (
-            <Text
-              style={{ marginRight: 20, color: '#2e64e5', fontWeight: 'bold' }}
+            <TouchableOpacity
+              disabled={postData === null}
               onPress={async () => {
+                Alert.alert('clicado');
                 if (!postData) {
                   setPost((p) => ({ ...p, error: 'Insira algo ' }));
                   return;
@@ -97,7 +106,9 @@ const StackHome = () => {
                 const { content } = postData;
                 const time = new Date().getTime();
                 Keyboard.dismiss();
+                setPost((p) => ({ ...p, loading: true }));
                 if (postData.file) {
+                  console.log('posting file');
                   const image = await postFile(postData.file);
                   await post('/posts', {
                     user: User.uid,
@@ -117,8 +128,16 @@ const StackHome = () => {
                   })
                 );
               }}>
-              Postar
-            </Text>
+              <Text
+                style={{
+                  marginRight: 20,
+                  // color: '#2e64e5',
+                  color: '#14274e',
+                  fontWeight: 'bold',
+                }}>
+                Postar
+              </Text>
+            </TouchableOpacity>
           ),
         })}
       />
