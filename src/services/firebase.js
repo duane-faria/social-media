@@ -19,7 +19,7 @@ export const postFile = async (file) => {
   return url;
 };
 
-export const get = async (endpoint, callback) => {
+export const get = async (endpoint) => {
   return new Promise((resolve, reject) => {
     database()
       .ref(endpoint)
@@ -28,6 +28,14 @@ export const get = async (endpoint, callback) => {
   // const data = await database()
   //   .ref(endpoint)
   //   .once('value', (snp) => callback(snp.val()));
+};
+
+export const realTimeGet = async (endpoint, callback) => {
+  database()
+    .ref(endpoint)
+    .on('value', (snapshot) => {
+      callback(snapshot.val());
+    });
 };
 
 export const put = async (endpoint, data) => {
